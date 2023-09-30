@@ -292,8 +292,6 @@ def validate_is_avl(root_node: Node) -> bool:
 
 def main():
     avl = AVLTree()
-
-    # values = [1,8,2,5,9,3,6,7]
     values = [1, 2, 3, 4, 5, 6, 7, 8]
 
     for i, value in enumerate(values):
@@ -301,8 +299,6 @@ def main():
         avl.draw_graph(i)
 
     print(avl)
-
-    avl.draw_graph(1234)
 
 
 if __name__ == '__main__':
