@@ -147,6 +147,23 @@ class AVLTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             validate_is_avl(root_node)
 
+    def test_delete_leaf(self):
+        avl = AVLTree()
+        remove_value = 0
+
+        for value in range(5):
+            avl.insert(value)
+
+        avl.draw_graph('delete')
+        avl.delete(remove_value)
+
+        validate_is_avl(avl.node)
+
+        for value in range(5, 1, -1):
+            self.assertTrue(avl.__contains__(value), f"Should contain value {value}")
+
+        self.assertFalse(avl.__contains__(remove_value), f"Should not contain value {value}")
+
     def test_has_child(self):
         cases = [
             Node(value=2, left=Node(value=1), right=Node(value=3)),

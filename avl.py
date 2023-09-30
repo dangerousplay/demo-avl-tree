@@ -47,19 +47,45 @@ class Node:
             rvalue = self.right.value
 
             if value == rvalue:
-                return self.right.delete(value)
-
-            if value > self.value:
-                return self.right.delete(value)
+                if not self.right.has_child():
+                    self.right = None
+                elif self.right.left and not self.right.right:
+                    self.right = self.right.left
+                elif self.right.right and not self.right.left:
+                    self.right = self.right.right
+            elif value > self.value:
+                self.right = self.right.delete(value)
 
         if self.left:
             lvalue = self.left.value
 
             if value == lvalue:
-                pass
+                if not self.left.has_child():
+                    self.left = None
+                elif self.left.left and not self.left.right:
+                    self.left = self.left.left
+                elif self.left.right and not self.left.left:
+                    self.left = self.left.right
+            elif value < self.value:
+                self.left = self.left.delete(value)
 
-            if value < self.value:
-                return self.left.delete(value)
+        self.__update_weight_balance__()
+
+        balance = self.balance
+
+        if self.left:
+            if balance > 1:
+                if self.left.balance >= 0:
+                    return self.__rotate_right__()
+                else:
+                    return self.__rotate_left_right__()
+
+        if self.right:
+            if balance < -1:
+                if self.right.balance <= 0:
+                    return self.__rotate_left__()
+                else:
+                    return self.__rotate_right_left__()
 
         return self
 
@@ -189,6 +215,12 @@ class AVLTree:
         else:
             self.node = self.node.insert(value)
 
+    def delete(self, value):
+        if not self.node:
+            return
+
+        self.node = self.node.delete(value)
+
     def __len__(self):
         return self.node.__len__()
 
@@ -201,7 +233,7 @@ class AVLTree:
     def __contains__(self, item):
         return self.node and self.node.__contains__(item)
 
-    def draw_graph(self, step: int):
+    def draw_graph(self, step):
         graph = nx.DiGraph()
 
         nodes = [self.node]
