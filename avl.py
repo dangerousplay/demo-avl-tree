@@ -43,31 +43,23 @@ class Node:
         return self
 
     def delete(self, value):
-        if self.right:
-            rvalue = self.right.value
+        if self.value == value:
+            if not self.has_child():
+                return None
 
-            if value == rvalue:
-                if not self.right.has_child():
-                    self.right = None
-                elif self.right.left and not self.right.right:
-                    self.right = self.right.left
-                elif self.right.right and not self.right.left:
-                    self.right = self.right.right
-            elif value > self.value:
-                self.right = self.right.delete(value)
+            if self.left and not self.right:
+                return self.left
+            elif self.right and not self.left:
+                return self.right
+            else:
+                successor = self.right.min_value()
+                self.value = successor.value
+                self.right = self.right.delete(successor.value)
 
-        if self.left:
-            lvalue = self.left.value
-
-            if value == lvalue:
-                if not self.left.has_child():
-                    self.left = None
-                elif self.left.left and not self.left.right:
-                    self.left = self.left.left
-                elif self.left.right and not self.left.left:
-                    self.left = self.left.right
-            elif value < self.value:
-                self.left = self.left.delete(value)
+        elif value < self.value and self.left:
+            self.left = self.left.delete(value)
+        elif value > self.value and self.right:
+            self.right = self.right.delete(value)
 
         self.__update_weight_balance__()
 
@@ -267,6 +259,9 @@ def validate_is_avl(root_node: Node) -> bool:
 
     while len(queue) > 0:
         node = queue.pop()
+
+        if node is None:
+            continue
 
         right_node = node.right
         left_node = node.left

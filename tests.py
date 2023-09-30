@@ -149,20 +149,57 @@ class AVLTestCase(unittest.TestCase):
 
     def test_delete_leaf(self):
         avl = AVLTree()
-        remove_value = 0
+        amount = 10
+        expect_nodes = []
 
-        for value in range(5):
+        for value in range(amount):
+            avl.insert(value)
+            expect_nodes.append(value)
+
+        for i in range(amount):
+            if i % 2 == 0:
+                remove_value = avl.node.min_value().value
+            else:
+                remove_value = avl.node.max_value().value
+
+            avl.delete(remove_value)
+
+            validate_is_avl(avl.node)
+
+            expect_nodes.remove(remove_value)
+
+            for value in expect_nodes:
+                self.assertTrue(avl.__contains__(value), f"Should contain value {value}")
+
+            self.assertFalse(avl.__contains__(remove_value), f"Should not contain value {remove_value}")
+
+    def test_delete_root(self):
+        avl = AVLTree()
+
+        expect_nodes = []
+        amount = 10
+
+        for value in range(amount):
+            expect_nodes.append(value)
             avl.insert(value)
 
-        avl.draw_graph('delete')
-        avl.delete(remove_value)
+        for i in range(amount):
+            remove_value = avl.node.value
 
-        validate_is_avl(avl.node)
+            avl.draw_graph(f"delete-root-{i}")
 
-        for value in range(5, 1, -1):
-            self.assertTrue(avl.__contains__(value), f"Should contain value {value}")
+            avl.delete(remove_value)
 
-        self.assertFalse(avl.__contains__(remove_value), f"Should not contain value {value}")
+            avl.draw_graph(f"delete-after-{i}")
+
+            validate_is_avl(avl.node)
+
+            expect_nodes.remove(remove_value)
+
+            for node in expect_nodes:
+                self.assertTrue(avl.__contains__(node), f"Should contain value {node}")
+
+            self.assertFalse(avl.__contains__(remove_value), f"Should not contain value {remove_value}")
 
     def test_has_child(self):
         cases = [
