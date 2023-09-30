@@ -147,6 +147,21 @@ class AVLTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             validate_is_avl(root_node)
 
+    def test_has_child(self):
+        cases = [
+            Node(value=2, left=Node(value=1), right=Node(value=3)),
+            Node(value=2, left=Node(value=1)),
+            Node(value=2, right=Node(value=3))
+        ]
+
+        for case in cases:
+            self.assertTrue(case.has_child())
+
+    def test_has_child_empty(self):
+        node = Node(value=2)
+
+        self.assertFalse(node.has_child())
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -72,6 +72,9 @@ class Node:
 
         return self.value == item
 
+    def has_child(self):
+        return self.left is not None or self.right is not None
+
     def __update_weight_balance__(self):
         self.__update_height__()
         self.balance = self.__balance__()
